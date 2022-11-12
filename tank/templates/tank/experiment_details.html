@@ -1,0 +1,66 @@
+{% extends 'tank/base.html' %}
+{% load i18n %}
+{% load filename %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <h3 class="page-header">{{ experiment.name }}</h3>
+            <div class="col-md-6">
+            {% if experiment.images.all %}
+                <h4>{% trans 'Scheme of experiment' %}: </h4>
+                <ul>
+                {% for image in experiment.images.all %}
+                    {% if image.is_schema %}
+                        <li>
+                            <a href="{{ image.file.url }}" rel="shadowbox[Mixed]">
+                                <img border="0" alt="{{ image.file|getfilename }}" src="{{ image.file.url }}" width="400">
+                            </a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+                </ul>
+                <hr>
+            {% endif %}
+            </div>
+            <div class="col-md-6">
+            {{ experiment.description| safe }}
+            </div>
+        </div>
+        <div class="row">
+             {% if experiment.movies.all %}
+                <h4 class="page-header">{% trans 'Movies' %} </h4>
+                {% for movie in experiment.movies.all %}
+                    <video width="400" controls>
+                        <source src="{{ movie.file.url }}" type="video/mp4">
+                        Your browser does not support HTML5 video.
+                    </video>
+                {% endfor %}
+                <hr>
+            {% endif %}
+            {% if images %}
+                <h4>{% trans 'Images' %}: </h4>
+                {% for image in images %}
+                    {% if not image.is_schema %}
+                            <a href="{{ image.file.url }}" rel="shadowbox[Mixed]">
+                                <img border="0" alt="{{ image.file|getfilename }}" src="{{ image.file.url }}" width="100">
+                            </a>
+                    {% endif %}
+                {% endfor %}
+                <hr>
+            {% endif %}
+            <!--
+            {% if experiment.data.all %}
+                <h4 class="page-header">{% trans 'Files' %} </h4>
+                <ul>
+                {% for d in experiment.data.all %}
+                    {{ d.file.filename }}
+                    <li><a href="{{ d.file.url }}">{{ d.file|getfilename }}</a></li>
+                {% endfor %}
+                </ul>
+                <hr>
+            {% endif %}
+            -->
+        </div>
+    </div>
+{% endblock %}
