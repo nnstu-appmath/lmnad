@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+  django:
+    image: lmnad_base_dev
+    container_name: lmnad_web_dev
+    build:
+      context: .
+      dockerfile: ./docker/dev/Dockerfile
+    env_file:
+      - dev.env
+    command: sh -c "wait-for db:3306 && python manage.py runserver 0.0.0.0:8001"
+    volumes:
+      - .:/lmnad
+    depends_on:
+      - db
+    ports:
+      - "8001:8001"
+    tty: true
+    networks:
+      - lmnad_net_dev
+
+  db:
+    container_name: lmnad_mysql_dev
+    image: mysql:5.7
+    env_file:
+      - dev.env
+    ports:
+      - "3306:3306"
+    command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - lmnad_net_dev
+
+networks:
+  lmnad_net_dev:
+
+volumes:
+  mysql_data:
+    driver: local
