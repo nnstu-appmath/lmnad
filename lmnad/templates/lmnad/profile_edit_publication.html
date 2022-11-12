@@ -1,0 +1,27 @@
+{% extends 'lmnad/base.html' %}
+{% load bootstrap_tags %}
+{% load i18n %}
+
+{% block content %}
+<h3 class="page-header">{% trans "Edit publication" %}</h3>
+    <form method="post" enctype="multipart/form-data">
+        <a href="{{ profile.account.get_profile_add_journal_url }}"
+            class="btn btn-success"
+            style="width: 150px !important"
+            target="_blank"
+            onclick="return showAddAnotherPopup(this);">{% trans 'New Journal' %}
+        </a>
+        {% csrf_token %}
+        {{ form.media }}
+        {{ form|as_bootstrap }}
+        {{ form.non_field_errors }}
+        <div class="form-actions">
+          <a href="{{ profile.account.get_profile_cancel_url }}"
+                           class="btn btn-default"
+                           style="width: 100px !important">
+                            {% trans 'Cancel' %}
+          </a>
+          <input type="submit" class="btn btn-primary" value="{% trans "Save" %}"/>
+        </div>
+    </form>
+{% endblock %}
