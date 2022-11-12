@@ -1,0 +1,254 @@
+{% extends 'lmnad/base.html' %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% block content %}
+     <script src="{% static 'publications/publications.js' %}"></script>
+     <div class="row">
+            <h3 class="page-header"> {% trans "Publications" %} </h3>
+     </div>
+
+     <div class="row">
+         <div class="text-center">
+                 <form class="form-inline" action="/publications" method="get">
+                     <div class="form-group">
+                       <input type="text" class="form-control" id="query" placeholder="{% trans 'doi, title, year or lastname' %}" name="query">
+                     </div>
+                     <button type="submit" id="publication_search_bt" class="btn btn-primary">{% trans 'Search' %}</button>
+                     <button type="button" class="btn btn-success" data-toggle="modal" data-target="#search">
+                        {% trans "Advanced search" %}
+                     </button>
+                 </form>
+             </div>
+         <br>
+     </div>
+
+    <!-- Modal -->
+     <div id="search" class="modal fade" role="dialog">
+         <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+              <form class="form-horizontal" role="form" action="/publications_search" method="get">
+                  <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                      <h4 class="modal-title"> {% trans "Search" %}</h4>
+                  </div>
+              <div class="modal-body">
+                <div class="form-group">
+                        <label for="types_id" class="col-sm-2 control-label">
+                            {% trans 'Select types' %}
+                        </label>
+                        <div class="col-sm-10">
+                            <select class="types_multiple" name="type" id="types_id" multiple="multiple" style="width: 100%">
+                                <option value="Article">{% trans 'Article' %}</option>
+                                <option value="Monograph">{% trans 'Monograph' %}</option>
+                                <option value="Group Monograph">{% trans 'Group Monograph' %}</option>
+                                <option value="Proceedings">{% trans 'Proceedings' %}</option>
+                                <option value="Theses conference">{% trans 'Theses conference' %}</option>
+                                <option value="Teaching materials">{% trans 'Teaching materials' %}</option>
+                                <option value="Patent">{% trans 'Patent' %}</option>
+                                <option value="Patent_BD">{% trans 'Patent_BD' %}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="author_id" class="col-sm-2 control-label">
+                            {% trans "Author" %}
+                        </label>
+                        <div class="col-sm-10">
+                            <input type="text"  name="author" class="form-control" id="author_id" placeholder="{% trans "Author" %}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="year_from_id" class="col-sm-2 control-label">
+                            {% trans "Year from" %}
+                        </label>
+                        <div class="col-sm-10">
+                            <input type="text"  name="year_from" class="form-control" id="year_from_id" placeholder="{% trans "Year from" %} ">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="year_to_id" class="col-sm-2 control-label">
+                            {% trans "Year to" %}
+                        </label>
+                        <div class="col-sm-10">
+                            <input type="text" name="year_to" class="form-control" id="year_to_id" placeholder="{% trans "Year to" %} ">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="active_checkbox_id" class="col-sm-2 control-label">
+                            {% trans "Enable checkboxes below for search" %}
+                        </label>
+                        <div class="col-sm-10">
+                            <input type="checkbox" name="enable_checkbox" class="form-control" id="active_checkbox_id">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="rinc_id" class="col-sm-2 control-label">
+                            {% trans "RINC" %}
+                        </label>
+                        <div class="col-sm-10">
+                            <input type="checkbox" name="rinc" class="form-control" id="rinc_id">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="vak_id" class="col-sm-2 control-label">
+                            {% trans "VAK" %}
+                        </label>
+                        <div class="col-sm-10">
+                            <input type="checkbox" name="vak" class="form-control" id="vak_id">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="wos_id" class="col-sm-2 control-label">
+                            {% trans "WOS" %}
+                        </label>
+                        <div class="col-sm-10">
+                            <input type="checkbox" name="wos" class="form-control" id="wos_id">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="scopus_id" class="col-sm-2 control-label">
+                            {% trans "SCOPUS" %}
+                        </label>
+                        <div class="col-sm-10">
+                            <input type="checkbox" name="scopus" class="form-control" id="scopus_id">
+                        </div>
+                    </div>
+              </div>
+              <div class="modal-footer">
+                  <button id='search_cancel' type="button" class="btn btn-default" data-dismiss="modal">{% trans "Close" %}</button>
+                  <button id='search_btn' type="submit" class="btn btn-primary">{% trans "Search" %}</button>
+              </div>
+              </form>
+            </div>
+         </div>
+     </div>
+
+     <div class="row">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th> {% trans "Type" %} </th>
+                    <th> {% trans "Title" %} </th>
+                    <th> {% trans "Information" %} </th>
+                    <th> {% trans "Authors" %} </th>
+                    <th> {% trans "Year" %} </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for publication in publications %}
+                <tr>
+                    <td class="row">
+                        {% if publication.type == 'Article' %}
+                            {% trans 'Article' %}
+                        {% elif publication.type == 'Monograph' %}
+                            {% trans 'Monograph' %}
+                        {% elif publication.type == 'Group Monograph' %}
+                            {% trans 'Group Monograph' %}
+                        {% elif publication.type == 'Proceedings' %}
+                            {% trans 'Proceedings' %}
+                        {% elif publication.type == 'Theses conference' %}
+                            {% trans 'Theses conference' %}
+                        {% elif publication.type == 'Teaching materials' %}
+                            {% trans 'Teaching materials' %}
+                        {% elif publication.type == 'Patent' %}
+                            {% trans 'Patent' %}
+                        {% elif publication.type == 'Patent_BD' %}
+                            {% trans 'Patent_BD' %}
+                        {% endif %}
+                    </td>
+                    <td class="row">
+                        {% if publication.link %}
+                            <a href="{{ publication.link }}">{{ publication.title }}</a>
+                        {% else %}
+                            {{ publication.title }}
+                        {% endif %}
+                        <p>
+                        {% if publication.type not in "Patent,Patent_BD" %}
+                        РИНЦ -
+                        {% if publication.is_rinc %}
+                            <img src="{% static 'admin/img/icon-yes.svg' %}" alt="True">
+                        {% else %}
+                            <img src="{% static 'admin/img/icon-no.svg' %}" alt="False">
+                        {% endif %}
+                        ВАК -
+                        {% if publication.is_vak %}
+                            <img src="{% static 'admin/img/icon-yes.svg' %}" alt="True">
+                        {% else %}
+                            <img src="{% static 'admin/img/icon-no.svg' %}" alt="False">
+                        {% endif %}
+                        Web of Science -
+                        {% if publication.is_wos %}
+                            <img src="{% static 'admin/img/icon-yes.svg' %}" alt="True">
+                        {% else %}
+                            <img src="{% static 'admin/img/icon-no.svg' %}" alt="False">
+                        {% endif %}
+                        SCOPUS -
+                        {% if publication.is_scopus %}
+                            <img src="{% static 'admin/img/icon-yes.svg' %}" alt="True">
+                        {% else %}
+                            <img src="{% static 'admin/img/icon-no.svg' %}" alt="False">
+                        {% endif %}
+                        {% endif %}
+                        </p>
+                    </td>
+                    <td class="row">{{ publication.information }}</td>
+                    <td>
+                        {% for author in publication.authors.all %}
+                            {% if author.user %}
+                                 <a href="{{ author.user.get_absolute_url }}">{{ author }}</a>;
+                            {% else %}
+                                {{ author }};
+                            {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td>
+                        <p> {{ publication.year }} </p>
+                    </td>
+                    <td>
+                        {% if publication.is_can_download and publication.file %}
+                            <a href="{{ publication.file.url }}"
+                               class="btn btn-success"
+                               style="width: 150px !important">
+                                {% trans 'Download' %}
+                            </a>
+                        {% endif %}
+                        <a onclick="return showAddAnotherPopup(this);"
+                           href="/publications/cite/{{ publication.id }}"
+                           class="btn btn-info"
+                           style="width: 150px !important"
+                           target="_blank">
+                            {% trans 'Cite' %}
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        {% if publications.has_other_pages %}
+              <ul class="pagination">
+                {% if publications.has_previous %}
+                  <li><a href="?page={{ publications.previous_page_number }}{% if request.GET.query %}&query={{ request.GET.query }}{% endif %}">&laquo;</a></li>
+                {% else %}
+                  <li class="disabled"><span>&laquo;</span></li>
+                {% endif %}
+                {% for i in publications.paginator.page_range %}
+                  {% if publications.number == i %}
+                    <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                  {% else %}
+                    <li><a href="?page={{ i }}{% if request.GET.query %}&query={{ request.GET.query }}{% endif %}">{{ i }}</a></li>
+                  {% endif %}
+                {% endfor %}
+                {% if publications.has_next %}
+                  <li><a href="?page={{ articles.next_page_number }}{% if request.GET.query %}&query={{ request.GET.query }}{% endif %}">&raquo;</a></li>
+                {% else %}
+                  <li class="disabled"><span>&raquo;</span></li>
+                {% endif %}
+              </ul>
+        {% endif %}
+     </div>
+
+{% endblock %}
