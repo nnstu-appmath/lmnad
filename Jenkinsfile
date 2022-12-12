@@ -13,6 +13,7 @@ pipeline {
             agent {
                 docker {
                     image 'lmnad_base'
+                    args 'dev.env'
                 }
             }
             steps {
