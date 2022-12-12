@@ -5,26 +5,26 @@ pipeline {
             agent any
             steps {
                 script {
-                    sh "docker build --no-cache -t lmnad_base -f Dockerfile ."
-                }
-            }
-        }
-        stage('Run') {
-            agent any
-            steps {
-                script {
-                    sh "docker run lmnad_base"
+                    sh "docker build --no-cache -t lmnad_base:latest -f Dockerfile ."
                 }
             }
         }
         stage('Test') {
-            agent {
-                docker {
-                    container lmnad_base
+            agent any
+            steps {
+                script {
+                    sh "docker run --name testlmnad_base -p 8000:8000 lmnad_base:latest"
                 }
             }
+            agent {
+                docker {
+                    testlmnad_base
+                {
+            }
             steps {
-                sh 'python manage.py test'
+                script {
+                    sh "python manage.py test"
+                }
             }
         }
         stage('Deploy') {
