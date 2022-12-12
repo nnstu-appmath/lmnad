@@ -5,14 +5,14 @@ pipeline {
             agent any
             steps {
                 script {
-                    sh "docker build --no-cache -t lmnad_base:latest -f Dockerfile ."
+                    sh "docker build --no-cache ."
                 }
             }
         }
         stage('Test') {
             agent {
                 docker {
-                    image 'lmnad_base:latest'
+                    image 'lmnad_base'
                 }
             }
             steps {
