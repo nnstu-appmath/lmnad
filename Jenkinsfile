@@ -9,10 +9,18 @@ pipeline {
                 }
             }
         }
+        stage('Run') {
+            agent any
+            steps {
+                script {
+                    sh "docker run lmnad_base"
+                }
+            }
+        }
         stage('Test') {
             agent {
                 docker {
-                    image lmnad_base:latest
+                    container lmnad_base
                 }
             }
             steps {
