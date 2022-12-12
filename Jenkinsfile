@@ -21,7 +21,7 @@ pipeline {
             agent {
                 docker {
                     testlmnad_base
-                {
+                }
             }
             steps {
                     sh "python manage.py test"
