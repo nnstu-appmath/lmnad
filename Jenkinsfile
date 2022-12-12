@@ -15,19 +15,8 @@ pipeline {
                     image 'lmnad_base'
                 }
             }
-            environment {
-                DJANGO_SECRET_KEY = 'dev'
-                DJANGO_SETTINGS_MODULE = 'project.settings.server'
-                DB_HOST = 'db'
-                DB_USER = 'dev'
-                DB_PASSWORD = 'dev'
-                CELERY_BROKER_URL = 'amqp://guest:guest@broker:5672'
-                CELERY_RESULT_BACKEND = 'rpc://'
-                MYSQL_DATABASE = 'lmnad_db'
-                MYSQL_USER = 'dev'
-                MYSQL_PASSWORD = 'dev'
-                YANDEX_TRANSLATE_API_KEY = 'dev'
-                GEOPOSITION_GOOGLE_MAPS_API_KEY = 'dev'   
+            env_file {
+                dev.env  
             }
             steps {
                     sh "python manage.py test"
