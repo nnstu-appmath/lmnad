@@ -9,22 +9,22 @@ pipeline {
                 }
             }
         }
-        stage('Test') {
+        stage('Run') {
             agent any
             steps {
                 script {
                     sh "docker run --name testlmnad_base -p 8000:8000 lmnad_base:latest"
                 }
             }
+        }
+        stage('Test') {
             agent {
                 docker {
                     testlmnad_base
                 {
             }
             steps {
-                script {
                     sh "python manage.py test"
-                }
             }
         }
         stage('Deploy') {
@@ -35,4 +35,3 @@ pipeline {
         }
     }
 }
-    }
