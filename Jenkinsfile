@@ -27,6 +27,14 @@ pipeline {
                     sh "python manage.py test"
             }
         }
+        stage('Clean') {
+            agent any
+            steps {
+                script {
+                    sh "docker stop testlmnad_base | docker rm testlmnad_base"
+                }
+            }
+        }
         stage('Deploy') {
             agent any
             steps {
