@@ -16,15 +16,15 @@ pipeline {
                 }
             }
             environment {
-                DJANGO_SECRET_KEY = '${DJANGO_SECRET_KEY}'
-                DJANGO_SETTINGS_MODULE = '${DJANGO_SETTINGS_MODULE}'
-                DB_HOST = '${DB_HOST}'
-                DB_USER = '${DB_USER}'
-                DB_PASSWORD = '${DB_PASSWORD}'
-                CELERY_BROKER_URL = '${CELERY_BROKER_URL}'
-                CELERY_RESULT_BACKEND = '${CELERY_RESULT_BACKEND}'
-                YANDEX_TRANSLATE_API_KEY = '${YANDEX_TRANSLATE_API_KEY}'
-                GEOPOSITION_GOOGLE_MAPS_API_KEY = '${GEOPOSITION_GOOGLE_MAPS_API_KEY}'   
+                DJANGO_SECRET_KEY = 'dev'
+                DJANGO_SETTINGS_MODULE = 'project.settings.server'
+                DB_HOST = 'db'
+                DB_USER = 'dev'
+                DB_PASSWORD = 'dev'
+                CELERY_BROKER_URL = 'amqp://guest:guest@broker:5672'
+                CELERY_RESULT_BACKEND = 'rpc://'
+                YANDEX_TRANSLATE_API_KEY = 'dev'
+                GEOPOSITION_GOOGLE_MAPS_API_KEY = 'dev'   
             }
             steps {
                     sh "python manage.py test"
