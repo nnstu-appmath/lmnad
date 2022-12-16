@@ -12,16 +12,16 @@ pipeline {
         stage('Test') {
             agent {
                 docker {
-                    image 'lmnad_base'
+                    image 'lmnad_base:latest'
                 }
             }
             environment {
                 DB_PASSWORD = 'dev'
                 CELERY_BROKER_URL = 'amqp://guest:guest@broker:5672'
                 CELERY_RESULT_BACKEND = 'rpc://'
-                MYSQL_DATABASE=lmnad_db
-                MYSQL_USER=dev
-                MYSQL_PASSWORD=dev
+                MYSQL_DATABASE = 'lmnad_db'
+                MYSQL_USER = 'dev'
+                MYSQL_PASSWORD = 'dev'
                 MYSQL_DATABASE = 'lmnad_db'
                 MYSQL_USER = 'dev'
                 MYSQL_PASSWORD = 'dev'
