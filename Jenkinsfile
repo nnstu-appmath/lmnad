@@ -9,12 +9,8 @@ pipeline {
                 }
             }
         }
-        stage('Test') {
-            agent {
-                docker {
-                    image 'lmnad_base:latest'
-                }
-            }
+        stage('Deploy') {
+            agent any
             environment {
                 DB_PASSWORD = 'dev'
                 CELERY_BROKER_URL = 'amqp://guest:guest@broker:5672'
@@ -25,12 +21,6 @@ pipeline {
                 YANDEX_TRANSLATE_API_KEY = 'dev'
                 GEOPOSITION_GOOGLE_MAPS_API_KEY = 'dev'  
             }
-            steps {
-                    sh "python manage.py test"
-            }
-        }
-        stage('Deploy') {
-            agent any
             steps {
                 sh "docker-compose up -d"
             }
