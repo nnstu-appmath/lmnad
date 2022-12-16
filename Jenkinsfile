@@ -5,7 +5,6 @@ pipeline {
             agent any
             steps {
                 script {
-                    sh "docker build --no-cache -t lmnad_base ."
                     sh "docker ps"
                 }
             }
