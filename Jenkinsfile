@@ -27,7 +27,7 @@ pipeline {
                 ALLOWED_HOSTS = 'localhost 127.0.0.1 188.120.225.17'
             }
             steps {
-                sh "docker-compose up -d"
+                sh "docker-compose up -f docker-compose.dev.yml -d"
             }
         }
     }
