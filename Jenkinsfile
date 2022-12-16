@@ -22,9 +22,6 @@ pipeline {
                 MYSQL_DATABASE = 'lmnad_db'
                 MYSQL_USER = 'dev'
                 MYSQL_PASSWORD = 'dev'
-                MYSQL_DATABASE = 'lmnad_db'
-                MYSQL_USER = 'dev'
-                MYSQL_PASSWORD = 'dev'
                 YANDEX_TRANSLATE_API_KEY = 'dev'
                 GEOPOSITION_GOOGLE_MAPS_API_KEY = 'dev'  
             }
