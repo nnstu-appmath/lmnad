@@ -12,7 +12,7 @@ pipeline {
         stage('Test') {
             agent {
                 docker {
-                    image 'lmnad_base:latest'
+                    image 'lmnad_base'
                 }
             }
             environment {
