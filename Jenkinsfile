@@ -5,17 +5,17 @@ pipeline {
             agent any
             steps {
                 script {
-                    sh "docker build --no-cache -t lmnad_base:latest ."
+                    sh "docker build -t lmnad_base:latest ."
                 }
             }
         }
         stage('Deploy') {
             agent any
             environment { 
+                load "dev.env"
                 ALLOWED_HOSTS = 'localhost 127.0.0.1 188.120.225.17'
             }
             steps {
-                load "dev.env"
                 sh "docker-compose -f docker-compose.dev.yml up -d"
             }
         }
