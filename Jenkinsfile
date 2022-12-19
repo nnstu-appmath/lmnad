@@ -12,10 +12,10 @@ pipeline {
         stage('Deploy') {
             agent any
             environment { 
-                load "dev.env"
                 ALLOWED_HOSTS = 'localhost 127.0.0.1 188.120.225.17'
             }
             steps {
+                load "dev.env"
                 sh "docker-compose -f docker-compose.dev.yml up -d"
             }
         }
