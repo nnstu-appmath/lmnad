@@ -15,7 +15,7 @@ pipeline {
                 ALLOWED_HOSTS = 'localhost 127.0.0.1 188.120.225.17'
             }
             steps {
-                load "dev.env"
+                load "env.groovy"
                 sh "docker-compose -f docker-compose.dev.yml up -d"
             }
         }
