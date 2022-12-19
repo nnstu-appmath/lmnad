@@ -5,7 +5,7 @@ pipeline {
             agent any
             steps {
                 script {
-                    sh "docker build -t --cache lmnad_base:latest ."
+                    sh "docker build -t --no-cache lmnad_base:latest ."
                 }
             }
         }
