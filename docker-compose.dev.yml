@@ -6,7 +6,7 @@ services:
     container_name: lmnad_web
     build:
       context: .
-    command: sh -c "wait-for db:3306 && python manage.py migrate && chmod +x /lmnad/run_app.sh && /lmnad/run_app.sh"
+    command: sh -c "wait-for db:3306 && chmod +x /lmnad/run_app.sh && /lmnad/run_app.sh"
     environment:
       - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
       - DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}
