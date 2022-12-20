@@ -18,4 +18,3 @@ echo 'Static ready'
 # run server
 echo 'UWSGI is working'
 uwsgi --http "188.120.225.17:8000" --module project.wsgi --master --processes 4 --threads 2 --logto /tmp/lmnad.log
-python manage.py migrate
