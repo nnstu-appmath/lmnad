@@ -16,7 +16,7 @@ pipeline {
                 }
             }
             steps {
-                sh 'python manage.py test'
+                sh 'python manage.py test -v 3'
             }
         }
         stage('Deploy') {
