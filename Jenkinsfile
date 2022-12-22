@@ -9,6 +9,16 @@ pipeline {
                 }
             }
         }
+        stage('Test') {
+            agent {
+                docker {
+                    image lmnad_base:latest
+                }
+            }
+            steps {
+                sh 'python manage.py test'
+            }
+        }
         stage('Deploy') {
             agent any
             environment { 
