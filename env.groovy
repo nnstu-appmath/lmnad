@@ -1,3 +1,4 @@
+env.DJANGO_DEBUG = 'True'
 env.DJANGO_SECRET_KEY = 'dev'
 env.DJANGO_SETTINGS_MODULE = 'project.settings.server'
 env.DB_HOST = 'db'
