@@ -12,7 +12,7 @@ pipeline {
         stage('Deploy') {
             agent any
             environment { 
-                ALLOWED_HOSTS = ('localhost' '127.0.0.1' '188.120.225.17')
+                ALLOWED_HOSTS = ['localhost' '127.0.0.1' '188.120.225.17']
             }
             steps {
                 load "env.groovy"
