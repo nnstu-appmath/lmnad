@@ -20,7 +20,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     net-tools \
     vim \
     git \
-    netcat \
+    netcat-traditional \
     gettext \
     && rm -rf /var/lib/apt/lists/*
 
@@ -35,11 +35,18 @@ RUN pip install --no-cache-dir uwsgi
 WORKDIR /$PROJECT
 
 # copy run_app.sh
+
 COPY ./run_app.sh .
 RUN sed -i 's/\r//' run_app.sh && chmod +x run_app.sh
 
+
 # copy project
-COPY . .
-RUN mv wait-for /bin/wait-for && chmod +x /bin/wait-for
+#COPY . .
+#RUN mv wait-for /bin/wait-for && chmod +x /bin/wait-for
+
+COPY . . 
+RUN mv wait-for /bin/wait-for && chmod +x /bin/wait-for && sed -i 's/\r//' /bin/wait-for
+
+EXPOSE 8000
 
 CMD ["/lmnad/run_app.sh"]
