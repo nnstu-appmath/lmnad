@@ -17,6 +17,17 @@ pipeline {
     }
 
     stages {
+        stage('Stop and Remove Containers') {
+            steps {
+                script {
+                    sh """
+                        docker stop lmnad_celery lmnad_nginx lmnad_flower lmnad_web lmnad_mysql lmnad_rabbitmq || true
+                        docker rm lmnad_celery lmnad_nginx lmnad_flower lmnad_web lmnad_mysql lmnad_rabbitmq || true
+                    """
+                }
+            }
+        }
+
         stage('Clone Repository') {
             steps {
                 git branch: 'lmnad_jenkins', url: 'https://github.com/nnstu-appmath/lmnad'
@@ -29,8 +40,6 @@ pipeline {
                     // Пересборка образов и запуск контейнеров
                     sh "docker-compose -f ${DOCKER_COMPOSE_FILE} up -d --build"
                     
-                    // Перезапуск контейнера Django
-                    sh "docker-compose -f ${DOCKER_COMPOSE_FILE} restart django"
                 }
             }
         }
