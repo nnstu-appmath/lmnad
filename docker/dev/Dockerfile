@@ -20,11 +20,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     net-tools \
     vim \
     git \
-<<<<<<< HEAD
     netcat-traditional \
-=======
-    netcat \
->>>>>>> master
     gettext \
     && rm -rf /var/lib/apt/lists/*
 
