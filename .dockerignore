@@ -15,8 +15,5 @@ docker
 docker-compose.yml
 Dockerfile
 requirements_win.txt
-<<<<<<< HEAD
 README.md
-=======
-README.md
->>>>>>> master
+
