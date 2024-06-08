@@ -16,14 +16,12 @@ pipeline {
         GEOPOSITION_GOOGLE_MAPS_API_KEY = 'local'
     }
 
-stages {
-    stage('Clone Repository') {
-        steps {
-            git branch: 'lmnad_jenkins', url: 'https://github.com/nnstu-appmath/lmnad'
+    stages {
+        stage('Clone Repository') {
+            steps {
+                git branch: 'lmnad_jenkins', url: 'https://github.com/nnstu-appmath/lmnad'
+            }
         }
-    }
-}
-
 
         stage('Build and Deploy') {
             steps {
