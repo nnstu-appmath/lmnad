@@ -5,8 +5,13 @@ import os
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'e^gzvyq8(f!5kg5o*(&a3!j(#0ky)80&8bd+_7i!i^7*3lbbno')
 
 # SECURITY WARNING: don't run with debug turned on in production!
+<<<<<<< HEAD
 DEBUG = os.environ.get('DJANGO_DEBUG', True)
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "localhost 127.0.0.1 188.120.225.17 188.120.248.147 lmnad.nntu.ru").split(" ")
+=======
+DEBUG = os.environ.get('DJANGO_DEBUG', False)
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "localhost 127.0.0.1 188.120.248.147 lmnad.nntu.ru").split(" ")
+>>>>>>> master
 
 DATABASES = {
     'default': {
