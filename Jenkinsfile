@@ -19,7 +19,7 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                git 'https://github.com/esinkirill/lmnad-jenkins'
+                git 'https://github.com/nnstu-appmath/lmnad'
             }
         }
 
