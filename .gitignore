@@ -7,10 +7,6 @@ __pycache__/
 .venv
 venv/
 
-<<<<<<< HEAD
-=======
-.env
->>>>>>> master
 *.pyc
 *.logd
 /media/*
