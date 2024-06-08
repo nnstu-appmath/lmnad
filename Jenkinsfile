@@ -28,32 +28,13 @@ pipeline {
                 script {
                     // Пересборка образов и запуск контейнеров
                     sh "docker-compose -f ${DOCKER_COMPOSE_FILE} up -d --build"
+                    
+                    // Перезапуск контейнера Django
+                    sh "docker-compose -f ${DOCKER_COMPOSE_FILE} restart django"
                 }
             }
         }
     }
-
-    post {
-        success {
-            echo 'Build and deployment succeeded!'
-        }
-        failure {
-            echo 'Build or deployment failed!'
-        }
-    }
-}
-stage('Build and Deploy') {
-    steps {
-        script {
-            // Пересборка образов и запуск контейнеров
-            sh "docker-compose -f ${DOCKER_COMPOSE_FILE} up -d --build"
-            
-            // Перезапуск контейнера Django
-            sh "docker-compose -f ${DOCKER_COMPOSE_FILE} restart django"
-        }
-    }
-}
-
 
     post {
         success {
