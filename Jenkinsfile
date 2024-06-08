@@ -23,28 +23,6 @@ pipeline {
             }
         }
 
-        stage('Clean Up') {
-            steps {
-                script {
-                    // Остановка контейнеров, связанных с вашим проектом
-                    sh """
-                        docker stop lmnad_nginx lmnad_celery lmnad_flower lmnad_web lmnad_rabbitmq lmnad_mysql || true
-                    """
-                    
-                    // Удаление контейнеров, связанных с вашим проектом
-                    sh """
-                        docker rm lmnad_nginx lmnad_celery lmnad_flower lmnad_web lmnad_rabbitmq lmnad_mysql || true
-                    """
-
-                    // Удаление только тех образов, которые связаны с вашим проектом
-                    sh """
-                        docker rmi lmnad_base lmnad_nginx || true
-                    """
-                    
-                }
-            }
-        }
-
         stage('Build and Deploy') {
             steps {
                 script {
@@ -54,6 +32,28 @@ pipeline {
             }
         }
     }
+
+    post {
+        success {
+            echo 'Build and deployment succeeded!'
+        }
+        failure {
+            echo 'Build or deployment failed!'
+        }
+    }
+}
+stage('Build and Deploy') {
+    steps {
+        script {
+            // Пересборка образов и запуск контейнеров
+            sh "docker-compose -f ${DOCKER_COMPOSE_FILE} up -d --build"
+            
+            // Перезапуск контейнера Django
+            sh "docker-compose -f ${DOCKER_COMPOSE_FILE} restart django"
+        }
+    }
+}
+
 
     post {
         success {
