@@ -5,7 +5,7 @@ pipeline {
         DOCKER_COMPOSE_FILE = 'docker-compose.prod.local.yml'
         DJANGO_SECRET_KEY = 'prod_local'
         DJANGO_SETTINGS_MODULE = 'project.settings.server'
-        DB_HOST = 'db_test'
+        DB_HOST = 'db'
         DB_USER = 'lmnad_prod_local'
         DB_PASSWORD = '12345'
         CELERY_BROKER_URL = 'amqp://guest:guest@broker:5672'
