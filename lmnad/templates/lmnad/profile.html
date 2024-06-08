@@ -1,0 +1,396 @@
+{% extends 'lmnad/base.html' %}
+{% load bootstrap_tags %}
+{% load i18n %}
+{% load staticfiles %}
+
+{% block content %}
+    <div class="row">
+    <h3 class="page-header">{% trans "Profile" %}:</h3>
+    {% if profile.account.photo %}
+        <center><img src="{{ profile.account.photo.file.url }}" width="210" height="250" class="center"></center>
+    {% endif %}
+    {% if profile.account.text %}
+        {% if user.is_authenticated and user.id == profile.id %}
+            <div>{{ profile.account.text | safe }}</div>
+            <form action="{% url 'edit_profile' %}">
+                <button type="submit" class="btn btn-primary">{% trans "Edit" %}</button>
+            </form>
+        {% else %}
+            <div>{{ profile.account.text | safe }}</div>
+        {% endif %}
+    {% else %}
+        <p>{% trans "No information" %}</p>
+    {% endif %}
+    </div>
+    {% if publications %}
+        <div class="row">
+            <h3 class="page-header">{% trans "Publication activity" %}:</h3>
+            <p><b>{% trans "Publications" %}:</b> {{ stats.publication_count }} </p>
+            <p><b>{% trans "Participation in conferences" %}:</b> {{ stats.conferences }} </p>
+        </div>
+    {% endif %}
+    <div class="row">
+    <hr>
+    {% if user.is_authenticated and user.id == profile.id %}
+            <span style="float:left;">
+                <form class="form-horizontal" role="form" action="{{ profile.account.get_profile_export_url }}" method="get">
+                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#filter">
+                        {% trans "Filter publications" %}
+                    </button>
+                    <button type="submit" class="btn btn-default">{% trans "Export to doc" %}</button>
+                </form>
+            </span>
+        {% if publications %}
+            <span style="float:right;">
+                <form action="{{ profile.account.get_profile_add_pub_url }}">
+                    <button type="submit" class="btn btn-primary">{% trans "Add new publication" %}</button>
+                </form>
+            </span>
+        {% endif %}
+    {% endif %}
+    </div>
+    {% if publications %}
+        <div class="row">
+        <h3 class="page-header">{% trans "Publications" %}:</h3>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th> {% trans "Type" %} </th>
+                    <th> {% trans "Title" %} </th>
+                    <th> {% trans "Information" %} </th>
+                    <th> {% trans "Authors" %} </th>
+                    <th> {% trans "Year" %} </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for publication in publications %}
+                <tr>
+                    <td class="row">
+                        {% if publication.type == 'Article' %}
+                            {% trans 'Article' %}
+                        {% elif publication.type == 'Monograph' %}
+                            {% trans 'Monograph' %}
+                        {% elif publication.type == 'Group Monograph' %}
+                            {% trans 'Group Monograph' %}
+                        {% elif publication.type == 'Proceedings' %}
+                            {% trans 'Proceedings' %}
+                        {% elif publication.type == 'Theses conference' %}
+                            {% trans 'Theses conference' %}
+                        {% elif publication.type == 'Teaching materials' %}
+                            {% trans 'Teaching materials' %}
+                        {% elif publication.type == 'Patent' %}
+                            {% trans 'Patent' %}
+                        {% elif publication.type == 'Patent_BD' %}
+                            {% trans 'Patent_BD' %}
+                        {% endif %}
+                    </td>
+                    <td class="row">
+                        {% if publication.link %}
+                            <a href="{{ publication.link }}">{{ publication.title }}</a>
+                        {% else %}
+                            {{ publication.title }}
+                        {% endif %}
+                        <p>
+                        {% if publication.type not in "Patent,Patent_BD" %}
+                        РИНЦ -
+                        {% if publication.is_rinc %}
+                            <img src="{% static 'admin/img/icon-yes.svg' %}" alt="True">
+                        {% else %}
+                            <img src="{% static 'admin/img/icon-no.svg' %}" alt="False">
+                        {% endif %}
+                        ВАК -
+                        {% if publication.is_vak %}
+                            <img src="{% static 'admin/img/icon-yes.svg' %}" alt="True">
+                        {% else %}
+                            <img src="{% static 'admin/img/icon-no.svg' %}" alt="False">
+                        {% endif %}
+                        Web of Science -
+                        {% if publication.is_wos %}
+                            <img src="{% static 'admin/img/icon-yes.svg' %}" alt="True">
+                        {% else %}
+                            <img src="{% static 'admin/img/icon-no.svg' %}" alt="False">
+                        {% endif %}
+                        SCOPUS -
+                        {% if publication.is_scopus %}
+                            <img src="{% static 'admin/img/icon-yes.svg' %}" alt="True">
+                        {% else %}
+                            <img src="{% static 'admin/img/icon-no.svg' %}" alt="False">
+                        {% endif %}
+                        {% endif %}
+                        </p>
+                    </td>
+                    <td class="row">{{ publication.information }}</td>
+                    <td>
+                        {% for author in publication.authors.all %}
+                            {% if author.user %}
+                                 <a href="{{ author.user.get_absolute_url }}">{{ author }}</a>;
+                            {% else %}
+                                {{ author }};
+                            {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td>
+                        <p> {{ publication.year }} </p>
+                    </td>
+                    <td>
+                        {% if publication.is_can_download and publication.file %}
+                            <a href="{{ publication.file.url }}"
+                               class="btn btn-success"
+                               style="width: 150px !important">
+                                {% trans 'Download' %}
+                            </a>
+                        {% endif %}
+                        <a onclick="return showAddAnotherPopup(this);"
+                           href="/publications/cite/{{ publication.id }}"
+                           class="btn btn-info"
+                           style="width: 150px !important"
+                           target="_blank">
+                            {% trans 'Cite' %}
+                        </a>
+                        {% if user.is_authenticated and user.id == profile.id %}
+                        <a href="{{ profile.account.get_profile_edit_pub_url }}{{ publication.id }}/"
+                           class="btn btn-warning"
+                           style="width: 150px !important">
+                            {% trans 'Edit' %}
+                        </a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        </div>
+    {% endif %}
+
+    {% if grants_head %}
+        <h3 class="page-header">{% trans "Head of Grants" %}:</h3>
+        <div class="row">
+        <table class="table table-hover">
+        <thead>
+            <tr>
+                <th> {% trans "Number" %} </th>
+                <th> {% trans "Type" %} </th>
+                <th> {% trans "Name" %} </th>
+                <th> {% trans "Supervisor" %} </th>
+                <th> {% trans "Dates" %} </th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for grant in grants_head|dictsortreversed:"date_start" %}
+            <tr>
+                <th class="row"><a href="{{ grant.get_absolute_url }}">{{ grant.number }}</a></th>
+                <td>
+                    {{ grant.type }}
+                </td>
+                <td>
+                    {{ grant.name }}
+                </td>
+                <td>
+                    {% for head in grant.head.all %}
+                        {% if head.account %}
+                             <a href="{{ head.get_absolute_url }}">{{ head }}</a>;
+                        {% else %}
+                            {{ head }};
+                        {% endif %}
+                    {% endfor %}
+                </td>
+                <td>
+                    <p> {{ grant.date_start|date:"M. Y" }} - {{ grant.date_end|date:"M. Y" }} </p>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+        </div>
+    {% endif %}
+
+    {% if grants_member %}
+        <div class="row">
+        <h3 class="page-header">{% trans "Member of Grants" %}:</h3>
+        <table class="table table-hover">
+        <thead>
+            <tr>
+                <th> {% trans "Number" %} </th>
+                <th> {% trans "Type" %} </th>
+                <th> {% trans "Name" %} </th>
+                <th> {% trans "Supervisor" %} </th>
+                <th> {% trans "Dates" %} </th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for grant in grants_member|dictsortreversed:"date_start" %}
+            <tr>
+                <th class="row"><a href="{{ grant.get_absolute_url }}">{{ grant.number }}</a></th>
+                <td>
+                    {{ grant.type }}
+                </td>
+                <td>
+                    {{ grant.name }}
+                </td>
+                <td>
+                    {% for head in grant.head.all %}
+                        {% if head.account %}
+                             <a href="{{ head.get_absolute_url }}">{{ head }}</a>;
+                        {% else %}
+                            {{ head }};
+                        {% endif %}
+                    {% endfor %}
+                </td>
+                <td>
+                    <p> {{ grant.date_start|date:"M. Y" }} - {{ grant.date_end|date:"M. Y" }} </p>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+        </div>
+    {% endif %}
+
+    {% if conferences %}
+        <div class="row">
+        <h3 class="page-header">{% trans "Participation in conferences" %}:</h3>
+        <table class="table table-hover">
+        <thead>
+            <tr>
+                <th> {% trans "Name of conference" %} </th>
+                <th> {% trans "Type" %} </th>
+                <th> {% trans "Form" %} </th>
+                <th> {% trans "Title" %} </th>
+                <th> {% trans "Place" %} </th>
+                <th> {% trans "Dates" %} </th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for conf in conferences %}
+            <tr>
+                <td>{{ conf.name_conference }}</td>
+                <td>
+                    {% if conf.publication.journal.conf_type == 'international' %}
+                        {% trans 'International' %}
+                    {% else %}
+                        {% trans 'National' %}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if conf.form == 'oral' %}
+                        {% trans 'Oral' %}
+                    {% else %}
+                        {% trans 'Poster' %}
+                    {% endif %}
+                </td>
+                <td>
+                    {{ conf.publication.title }}
+                </td>
+                <td>
+                    {{ conf.publication.journal.place }}
+                </td>
+                <td>
+                    {% if conf.publication.journal.date_start and conf.publication.journal.date_stop %}
+                        {{ conf.publication.journal.date_start |date:"d. M. Y." }} - {{ conf.publication.journal.date_stop|date:"d. M. Y." }}
+                    {% else %}
+                        {{ conf.publication.year }}
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+        </div>
+    {% endif %}
+
+    <!-- Modal -->
+     <div id="filter" class="modal fade" role="dialog">
+         <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+              <form class="form-horizontal" role="form" action="{{ user.get_absolute_url }}" method="get">
+                  <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                      <h4 class="modal-title"> {% trans "Filter" %}</h4>
+                  </div>
+              <div class="modal-body">
+                <div class="form-group">
+                        <label for="types_id" class="col-sm-2 control-label">
+                            {% trans 'Select types' %}
+                        </label>
+                        <div class="col-sm-10">
+                            <select class="types_multiple" name="type" id="types_id" multiple="multiple" style="width: 100%">
+                                <option value="Article">{% trans 'Article' %}</option>
+                                <option value="Monograph">{% trans 'Monograph' %}</option>
+                                <option value="Group Monograph">{% trans 'Group Monograph' %}</option>
+                                <option value="Proceedings">{% trans 'Proceedings' %}</option>
+                                <option value="Theses conference">{% trans 'Theses conference' %}</option>
+                                <option value="Teaching materials">{% trans 'Teaching materials' %}</option>
+                                <option value="Patent">{% trans 'Patent' %}</option>
+                                <option value="Patent_BD">{% trans 'Patent_BD' %}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="year_from_id" class="col-sm-2 control-label">
+                            {% trans "Year from" %}
+                        </label>
+                        <div class="col-sm-10">
+                            <input type="text"  name="year_from" class="form-control" id="year_from_id" placeholder="{% trans "Year from" %} ">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="year_to_id" class="col-sm-2 control-label">
+                            {% trans "Year to" %}
+                        </label>
+                        <div class="col-sm-10">
+                            <input type="text" name="year_to" class="form-control" id="year_to_id" placeholder="{% trans "Year to" %} ">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="active_checkbox_id" class="col-sm-2 control-label">
+                            {% trans "Enable checkboxes below for search" %}
+                        </label>
+                        <div class="col-sm-10">
+                            <input type="checkbox" name="enable_checkbox" class="form-control" id="active_checkbox_id">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="rinc_id" class="col-sm-2 control-label">
+                            {% trans "RINC" %}
+                        </label>
+                        <div class="col-sm-10">
+                            <input type="checkbox" name="rinc" class="form-control" id="rinc_id">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="vak_id" class="col-sm-2 control-label">
+                            {% trans "VAK" %}
+                        </label>
+                        <div class="col-sm-10">
+                            <input type="checkbox" name="vak" class="form-control" id="vak_id">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="wos_id" class="col-sm-2 control-label">
+                            {% trans "WOS" %}
+                        </label>
+                        <div class="col-sm-10">
+                            <input type="checkbox" name="wos" class="form-control" id="wos_id">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="scopus_id" class="col-sm-2 control-label">
+                            {% trans "SCOPUS" %}
+                        </label>
+                        <div class="col-sm-10">
+                            <input type="checkbox" name="scopus" class="form-control" id="scopus_id">
+                        </div>
+                    </div>
+              </div>
+              <div class="modal-footer">
+                  <button id='search_cancel' type="button" class="btn btn-default" data-dismiss="modal">{% trans "Close" %}</button>
+                  <button id='search_btn' type="submit" class="btn btn-primary">{% trans "Search" %}</button>
+              </div>
+              </form>
+            </div>
+         </div>
+     </div>
+
+{% endblock %}

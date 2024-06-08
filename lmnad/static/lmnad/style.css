@@ -1,0 +1,37 @@
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  margin-bottom: 50px;
+}
+
+/* Remove the navbar's default margin-bottom and rounded borders */
+.navbar {
+    margin-bottom: 0;
+    border-radius: 0;
+}
+
+.logo {
+    width: 50px;
+    height: 44px;
+}
+
+.logo_old {
+    width: 120px;
+    height: 44px;
+}
+
+.lang {
+    min-width: 44px; !important;
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background-color:#dddddd;
+    color: #000;
+    font-size: 13px;
+    padding: 10px;
+}

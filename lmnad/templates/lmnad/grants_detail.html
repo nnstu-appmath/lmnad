@@ -1,0 +1,75 @@
+{% extends 'lmnad/base.html' %}
+{% load i18n %}
+
+{% block content %}
+<h3 class="page-header">{{ grant.name }}</h3>
+
+    <table class="table table-hover">
+    <tbody>
+        <tr>
+            <th><b>{% trans "Type" %}</b></th>
+            <th>{{ grant.type }}</th>
+        </tr>
+        <tr>
+            <th><b>{% trans "Number" %}</b></th>
+            <th>{{ grant.number }}</th>
+        </tr>
+        <tr>
+            <th><b>{% trans "Dates" %}</b></th>
+            <th>{{ grant.date_start|date:"M. Y" }} - {{ grant.date_end|date:"M. Y" }}</th>
+        </tr>
+        <tr>
+            <th><b>{% trans "Supervisors" %}</b></th>
+            <th>
+                {% for head in grant.head.all %}
+                    {% if head.account %}
+                        <a href="{{ head.get_absolute_url }}">{{ head}}</a><br>
+                    {% else %}
+                        {{ head }}<br>
+                    {% endif %}
+                {% endfor %}
+            </th>
+        </tr>
+        {% if grant.reference %}
+        <tr>
+            <th><b>{% trans "Link" %}</b></th>
+            <th><a href="{{ grant.reference }}">{% trans "Link" %}</a><br></th>
+        </tr>
+        {% endif %}
+        {% if grant.reference_result %}
+        <tr>
+            <th><b>{% trans "Link to results" %}</b></th>
+            <th><a href="{{ grant.reference_result }}">{% trans "Link to results" %}</a><br></th>
+        </tr>
+        {% endif %}
+
+    </tbody>
+    </table>
+    <table class="table table-hover">
+        <tbody>
+        <tr>
+            <th class="text-center"><b>{% trans "Participants" %}:</b></th>
+        </tr>
+        {% for member in grant.members.all %}
+            <tr>
+                <th class="text-center">
+                    {% if member.account %}
+                        <a href="{{ member.get_absolute_url }}">{{ member }}</a>
+                    {% else %}
+                       {{ member }}
+                    {% endif %}
+                </th>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% if grant.abstract %}
+    <table class="table table-hover">
+        <tbody>
+            <tr>
+                {{ grant.abstract | safe }}
+            </tr>
+        </tbody>
+    </table>
+    {% endif %}
+{% endblock %}

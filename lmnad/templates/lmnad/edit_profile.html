@@ -1,0 +1,16 @@
+{% extends 'lmnad/base.html' %}
+{% load bootstrap_tags %}
+{% load i18n %}
+
+{% block content %}
+<h3 class="page-header">{% trans "Edit profile" %}</h3>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.media }}
+        {{ form|as_bootstrap_horizontal }}
+        {{ form.non_field_errors }}
+        <div class="form-actions">
+          <input type="submit" class="btn btn-primary" value="{% trans "Save" %}"/>
+        </div>
+    </form>
+{% endblock %}
