@@ -23,10 +23,32 @@ pipeline {
             }
         }
 
+        stage('Clean Up') {
+            steps {
+                script {
+                    // Остановка контейнеров, связанных с вашим проектом
+                    sh """
+                        docker stop lmnad_nginx lmnad_celery lmnad_flower lmnad_web lmnad_rabbitmq lmnad_mysql || true
+                    """
+                    
+                    // Удаление контейнеров, связанных с вашим проектом
+                    sh """
+                        docker rm lmnad_nginx lmnad_celery lmnad_flower lmnad_web lmnad_rabbitmq lmnad_mysql || true
+                    """
+
+                    // Удаление только тех образов, которые связаны с вашим проектом
+                    sh """
+                        docker rmi lmnad_base lmnad_nginx || true
+                    """
+                    
+                }
+            }
+        }
+
         stage('Build and Deploy') {
             steps {
                 script {
-                    // Start containers and build if necessary
+                    // Пересборка образов и запуск контейнеров
                     sh "docker-compose -f ${DOCKER_COMPOSE_FILE} up -d --build"
                 }
             }
