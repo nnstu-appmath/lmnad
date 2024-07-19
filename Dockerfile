@@ -39,13 +39,11 @@ RUN pip install --no-cache-dir uwsgi
 # set work directory
 WORKDIR /$PROJECT
 
-# copy run_app.sh
-COPY ./run_app.sh .
-RUN sed -i 's/\r//' run_app.sh && chmod +x run_app.sh
-
 # copy project
 COPY . .
-RUN mv wait-for /bin/wait-for && chmod +x /bin/wait-for
+
+# prepare scripts
+RUN sed -i 's/\r//' wait-for && mv wait-for /bin/wait-for && chmod +x /bin/wait-for
+RUN sed -i 's/\r//' run_app.sh && chmod +x run_app.sh
 
 CMD ["/lmnad/run_app.sh"]
-
