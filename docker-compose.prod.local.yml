@@ -27,6 +27,44 @@ services:
     networks:
       - lmnad_net
 
+  # Captured Waves DB - integration
+  capwave_back:
+    image: lmnad_capwave_back
+    container_name: lmnad_capwave_back
+    build: ./external_projects/captured_waves_db/lmnad_back
+    env_file: ./external_projects/captured_waves_db/.env
+    restart: always
+    ports:
+      - '8088:8088'
+    depends_on:
+      - db
+    networks:
+      - lmnad_net
+
+  capwave_front:
+    image: lmnad_capwave_front
+    container_name: lmnad_capwave_front
+    build: ./external_projects/captured_waves_db/lmnad_front
+    stdin_open: true
+    tty: true
+    restart: always
+    networks:
+      - lmnad_net
+
+  capwave_nginx:
+    image: capwave_nginx
+    container_name: lmnad_capwave_nginx
+    build: ./external_projects/captured_waves_db/
+    ports:
+      - "8001:8001"
+    restart: always
+    depends_on:
+      - capwave_back
+      - capwave_front
+      - nginx
+    networks:
+      - lmnad_net
+
   db:
     container_name: lmnad_mysql
     image: mysql:5.7

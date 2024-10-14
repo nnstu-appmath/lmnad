@@ -1,0 +1,6 @@
+[submodule "external_projects/captured_waves_db/lmnad_back"]
+	path = external_projects/captured_waves_db/lmnad_back
+	url = git@github.com:q1000treadz/lmnad_back.git
+[submodule "external_projects/captured_waves_db/lmnad_front"]
+	path = external_projects/captured_waves_db/lmnad_front
+	url = https://github.com/q1000treadz/lmnad_front

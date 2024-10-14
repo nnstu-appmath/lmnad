@@ -1,0 +1,64 @@
+version: '3'
+
+services:
+  capwave_back:
+    image: lmnad_capwave_back
+    build: ./lmnad_back
+    env_file: .env
+    restart: always
+    ports:
+      - '8088:8088'
+    depends_on:
+      - db
+    networks:
+      - lmnad_net
+
+  capwave_front:
+    build: ./lmnad_front
+    image: lmnad_capwave_front
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./:/app
+    stdin_open: true
+    tty: true
+    networks:
+      - lmnad_net
+
+  capwave_nginx:
+    image: capwave_nginx
+    container_name: capwave_nginx
+    build: .
+    ports:
+      - "8001:8001"
+    restart: always
+    depends_on:
+      - capwave_back
+      - capwave_front
+    networks:
+      - lmnad_net
+
+  db:
+    image: mysql:5.7
+    command: ['mysqld',
+              '--character-set-server=utf8mb4',
+              '--collation-server=utf8mb4_unicode_ci',
+              '--max-allowed-packet=128M']
+    restart: always
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+        # MYSQL_USER: ${DB_USERNAME}
+        # MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - lmnad_capwave_data:/var/lib/mysql
+    ports:
+      - '${DB_PORT}:${DB_PORT}'
+    networks:
+      - lmnad_net
+
+volumes:
+  lmnad_capwave_data:
+
+networks:
+  lmnad_net:
