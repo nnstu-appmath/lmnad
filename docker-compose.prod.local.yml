@@ -56,7 +56,7 @@ services:
     container_name: lmnad_capwave_nginx
     build: ./external_projects/captured_waves_db/
     ports:
-      - "8001:8001"
+      - "8005:8005"
     restart: always
     depends_on:
       - capwave_back
