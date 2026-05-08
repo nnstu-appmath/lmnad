@@ -36,8 +36,8 @@ services:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - MYSQL_USER=${DB_USER}
       - MYSQL_PASSWORD=${DB_PASSWORD}
-    ports:
-      - "3306:3306"
+#    ports:
+#      - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
     restart: always
@@ -93,8 +93,8 @@ services:
     command: flower --port=5555 --url_prefix=flower
     environment:
       - CELERY_BROKER_URL=${CELERY_BROKER_URL}
-    ports:
-      - "5555:5555"
+#    ports:
+#      - "5555:5555"
     depends_on:
       - broker
     restart: always
