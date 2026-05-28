@@ -26,6 +26,8 @@ from publications.models import Publication, Conference, AuthorPublication, Jour
 from datetime import datetime
 import logging
 
+from django.contrib.auth.decorators import login_required
+
 logger = logging.getLogger(__name__)
 
 
@@ -51,6 +53,7 @@ def people(request):
     return render(request, 'lmnad/people.html', context)
 
 
+@login_required(login_url='login')
 def seminars(request):
     seminars_list = Seminar.objects.all().order_by('-date')
     page = request.GET.get('page', 1)
@@ -70,6 +73,7 @@ def seminars(request):
     return render(request, 'lmnad/seminars.html', context)
 
 
+@login_required(login_url='login')
 def seminar_detail(request, pk):
     seminar = get_object_or_404(Seminar, pk=pk)
     context = {
@@ -78,6 +82,7 @@ def seminar_detail(request, pk):
     return render(request, 'lmnad/seminars_details.html', context)
 
 
+@login_required(login_url='login')
 def protections(request):
     protections_list = Protection.objects.all().order_by('-date')
     page = request.GET.get('page', 1)
@@ -137,6 +142,7 @@ def project_detail(request, name):
     return render(request, 'lmnad/project_details.html', context)
 
 
+@login_required(login_url='login')
 def events(request):
     events_list = Event.objects.all().order_by('-date')
     page = request.GET.get('page', 1)
@@ -155,6 +161,7 @@ def events(request):
     return render(request, 'lmnad/events.html', context)
 
 
+@login_required(login_url='login')
 def event_detail(request, pk):
     event = get_object_or_404(Event, pk=pk)
 
@@ -164,6 +171,7 @@ def event_detail(request, pk):
     return render(request, 'lmnad/events_details.html', context)
 
 
+@login_required(login_url='login')
 def conferences(request):
     conferences_list = Journal.objects.filter(conf_checkbox=True).order_by('-date_start')
     page = request.GET.get('page', 1)

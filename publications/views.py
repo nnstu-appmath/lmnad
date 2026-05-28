@@ -9,7 +9,11 @@ from rest_framework.pagination import PageNumberPagination, LimitOffsetPaginatio
 from publications.models import Publication
 from publications.serializers import PublicationSerializer
 
+from django.contrib.auth.decorators import login_required
+from rest_framework.permissions import IsAuthenticated
 
+
+@login_required(login_url='login')
 def publications(request):
     """ Publications """
     query = request.GET.get('query', None)
@@ -43,6 +47,7 @@ def publications(request):
     return render(request, 'publications/page.html', context)
 
 
+@login_required(login_url='login')
 def publications_search(request):
     """ Publications search """
     year_from = request.GET.get('year_from', None)
@@ -104,6 +109,7 @@ def publications_search(request):
     return render(request, 'publications/page.html', context)
 
 
+@login_required(login_url='login')
 def cite_view(request, obj_id):
     template = 'admin/cite.html'
 
@@ -120,4 +126,4 @@ class PublicationViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Publication.objects.all()
     serializer_class = PublicationSerializer
     pagination_class = PageNumberPagination
-
+    permission_classes = [IsAuthenticated]
